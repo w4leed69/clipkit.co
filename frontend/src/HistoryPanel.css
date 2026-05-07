@@ -1,0 +1,42 @@
+.history-panel { background: #111; }
+.history-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; border-bottom: 1px solid #1e1e1e;
+}
+.history-header h3 { font-size: 15px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+.count { background: #c8ff00; color: #000; border-radius: 20px; padding: 1px 8px; font-size: 12px; font-weight: 700; }
+.btn-clear-history {
+  background: none; border: 1px solid #222; border-radius: 8px;
+  padding: 5px 12px; font-size: 13px; color: #666; transition: all .2s;
+}
+.btn-clear-history:hover { background: rgba(255,68,68,.1); border-color: rgba(255,68,68,.3); color: #ff6666; }
+.history-list { padding: 8px 0; max-height: 400px; overflow-y: auto; }
+.history-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 24px; transition: background .15s;
+}
+.history-item:hover { background: rgba(255,255,255,.03); }
+.history-thumb { width: 60px; height: 44px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+.history-thumb-placeholder {
+  width: 60px; height: 44px; background: #1a1a1a; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.history-info { flex: 1; min-width: 0; }
+.history-title {
+  font-size: 13px; font-weight: 500; color: #ddd;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px;
+}
+.history-meta { font-size: 11px; color: #555; display: flex; align-items: center; gap: 5px; }
+.history-empty, .history-loading {
+  background: #111; border-radius: 12px; padding: 48px 24px; text-align: center;
+}
+.history-empty-icon { font-size: 36px; margin-bottom: 12px; }
+.history-empty h3 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.history-empty p { font-size: 14px; color: #555; }
+.history-loading { display: flex; flex-direction: column; align-items: center; gap: 12px; color: #555; font-size: 14px; }
+.spinner {
+  width: 20px; height: 20px; border: 2px solid #222; border-top-color: #c8ff00;
+  border-radius: 50%; animation: spin .7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
