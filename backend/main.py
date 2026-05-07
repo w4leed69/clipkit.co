@@ -12,7 +12,7 @@ app = FastAPI(title="Social Media Video Downloader")
 
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS",
-    "http://localhost:5173,http://localhost:3000"
+                "http://localhost:5173,http://localhost:3000,https://clipkit-co.vercel.app,https://clipkit-a6wf56pnd-zahidwaleed51-gmailcoms-projects.vercel.app"
 ).split(",")
 
 app.add_middleware(
