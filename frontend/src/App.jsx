@@ -9,7 +9,7 @@ const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const PLATFORM_COLORS = {
   Instagram: "linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)",
   Facebook: "linear-gradient(45deg, #1877f2, #0d5dbf)",
-  Snapchat: "linear-gradient(45deg, #f0e800, #c8c200)",
+  Snapchat: "#FFFC00",
   TikTok: "linear-gradient(45deg, #69c9d0, #ee1d52)",
   "Twitter/X": "linear-gradient(45deg, #1da1f2, #0d8bd9)",
   YouTube: "linear-gradient(45deg, #ff0000, #cc0000)",
@@ -17,381 +17,375 @@ const PLATFORM_COLORS = {
 };
 
 const FEATURES = [
-  { icon: "⚡", title: "Lightning fast", desc: "Downloads complete in under 3 seconds on any connection." },
+  { icon: "⚡", title: "Lightning fast", desc: "Downloads complete in less than a minute on any connection." },
   { icon: "🎬", title: "Up to 4K quality", desc: "We preserve original resolution. No compression, no quality loss." },
-  { icon: "🚫", title: "Zero watermark", desc: "Clean, source-quality video. No overlays, no branding added." },
+  { icon: "🚫", title: "Zero watermark", desc: "Clean, source-quality video. No overlays, no branding added — except Snapchat, which includes its own watermark." },
   { icon: "🌐", title: "7+ platforms", desc: "Instagram, TikTok, YouTube, Facebook, X, Snapchat & more." },
   { icon: "🔒", title: "Private by default", desc: "We don't store your links, files, or any personal data." },
-  { icon: "🖥️", title: "No install needed", desc: "Runs entirely in your browser. Works on any device instantly." },
+  { icon: "🖥️", title: "No install needed", desc: "Runs entirely in your browser. Works on any device quickly." },
 ];
 
-const FAQS = [
+const HOW_IT_WORKS = [
+  { step: "01", title: "Paste the link", desc: "Copy any public video URL from Instagram, TikTok, YouTube, Facebook or Snapchat." },
+  { step: "02", title: "Click download", desc: "We fetch the video quickly — no queues, no waiting rooms, no captchas." },
+  { step: "03", title: "Save the file", desc: "Pick your quality and save the original file directly to your device." },
+];
+
+const FAQ = [
   { q: "Is ReelSaver free to use?", a: "Yes — completely free. No account required for basic downloads." },
-  { q: "Which platforms are supported?", a: "Instagram, TikTok, YouTube, Facebook, X (Twitter), Snapchat, and more." },
-  { q: "Do you store my videos?", a: "No. Files are processed in-memory and deleted immediately after download." },
-  { q: "Can I download private videos?", a: "No. Only publicly available content can be downloaded. Private accounts are blocked by design." },
-  { q: "What's the max quality I can download?", a: "Up to 4K if the original source is 4K. We never upscale or compress." },
+  { q: "Which platforms are supported?", a: "Instagram, TikTok, YouTube, Facebook, X (Twitter), Snapchat and more." },
+  { q: "Do you store my videos?", a: "No. We never store your videos, links, or personal data." },
+  { q: "Can I download private videos?", a: "No — ReelSaver only works with public content." },
+  { q: "What's the max quality I can download?", a: "Up to 4K, depending on the original upload quality." },
 ];
 
-const COMPARISONS = [
-  { without: "Open screen recorder", with: "Paste the URL" },
-  { without: "Record in real-time (wait full duration)", with: "Download in 3 seconds" },
-  { without: "Get watermark + low quality", with: "Get original quality, no watermark" },
-  { without: "Manually trim & export", with: "File is ready instantly" },
-  { without: "Lose audio sync or metadata", with: "Full audio, original metadata" },
+const PLATFORMS = [
+  {
+    num: "001",
+    name: "Instagram",
+    logo: (
+      <div style={{ width: 48, height: 48, borderRadius: 14, overflow: "hidden", flexShrink: 0, background: "radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </div>
+    ),
+    status: "no-watermark",
+  },
+  {
+    num: "002",
+    name: "TikTok",
+    logo: (
+      <div style={{ width: 48, height: 48, borderRadius: 14, overflow: "hidden", flexShrink: 0, background: "#010101", border: "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.14 8.14 0 0 0 4.77 1.52V6.78a4.85 4.85 0 0 1-1-.09z"/></svg>
+      </div>
+    ),
+    status: "no-watermark",
+  },
+  {
+    num: "003",
+    name: "YouTube",
+    logo: (
+      <div style={{ width: 48, height: 48, borderRadius: 14, overflow: "hidden", flexShrink: 0, background: "#ff0000", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </div>
+    ),
+    status: "no-watermark",
+  },
+  {
+    num: "004",
+    name: "Facebook",
+    logo: (
+      <div style={{ width: 48, height: 48, borderRadius: 14, overflow: "hidden", flexShrink: 0, background: "#1877f2", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </div>
+    ),
+    status: "no-watermark",
+  },
+  {
+    num: "005",
+    name: "X (Twitter)",
+    logo: (
+      <div style={{ width: 48, height: 48, borderRadius: 14, overflow: "hidden", flexShrink: 0, background: "#000", border: "1px solid #333", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </div>
+    ),
+    status: "no-watermark",
+  },
+  {
+    num: "006",
+    name: "Snapchat",
+    logo: (
+      <div style={{ width: 48, height: 48, borderRadius: 14, overflow: "hidden", flexShrink: 0, background: "#FFFC00", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <i className="bi bi-snapchat" style={{ fontSize: 26, color: "#000", lineHeight: 1 }}></i>
+      </div>
+    ),
+    status: "watermark",
+  },
 ];
-
-function formatDuration(s) {
-  if (!s) return null;
-  return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
-}
-function formatSize(b) {
-  if (!b) return null;
-  if (b > 1048576) return `${(b / 1048576).toFixed(1)} MB`;
-  if (b > 1024) return `${(b / 1024).toFixed(1)} KB`;
-  return `${b} B`;
-}
 
 export default function App() {
-  const [user, setUser] = useState(null);
+  const [url, setUrl] = useState("");
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [openFaq, setOpenFaq] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
-  const [url, setUrl] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [downloading, setDownloading] = useState(false);
-  const [videoInfo, setVideoInfo] = useState(null);
-  const [selectedFormat, setSelectedFormat] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [openFaq, setOpenFaq] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+    supabase.auth.getUser().then(({ data }) => setUser(data?.user ?? null));
+    const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
       setUser(session?.user ?? null);
-      if (session?.user) setShowAuth(false);
     });
-    return () => subscription.unsubscribe();
+    return () => listener.subscription.unsubscribe();
   }, []);
 
-  async function handleFetch(e) {
+  const handleDownload = async (e) => {
     e.preventDefault();
-    if (!url.trim()) return;
-    setLoading(true); setError(""); setSuccess(""); setVideoInfo(null); setSelectedFormat("");
+    setLoading(true);
+    setError("");
+    setResult(null);
     try {
-      const res = await fetch(`${API}/api/info`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: url.trim() }),
+      const res = await fetch(`${API}/download`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
       });
       const data = await res.json();
-      if (!res.ok) { setError(data.detail || "Failed to fetch video info."); return; }
-      setVideoInfo(data);
-      setSelectedFormat(data.formats[0]?.format_id || "best");
-    } catch { setError("Network error. Make sure the backend is running."); }
-    finally { setLoading(false); }
-  }
+      if (!res.ok) throw new Error(data.detail || "Download failed");
+      setResult(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  async function handleDownload() {
-    if (!videoInfo) return;
-    setDownloading(true); setError(""); setSuccess("");
-    try {
-      const res = await fetch(`${API}/api/download?format_id=${encodeURIComponent(selectedFormat)}`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: url.trim() }),
+  const handleSave = async (videoUrl, quality) => {
+    if (user) {
+      await supabase.from("download_history").insert({
+        user_id: user.id,
+        video_url: url,
+        platform: result?.platform,
+        title: result?.title,
+        quality,
       });
-      const data = await res.json();
-      if (!res.ok) { setError(data.detail || "Download failed."); return; }
-      const link = document.createElement("a");
-      link.href = `${API}${data.download_url}`; link.download = data.filename; link.click();
-      setSuccess("Download started!");
-      if (user) await supabase.from("downloads").insert({ user_id: user.id, url: url.trim(), title: videoInfo.title, platform: videoInfo.platform, thumbnail: videoInfo.thumbnail });
-    } catch { setError("Download failed. Please try again."); }
-    finally { setDownloading(false); }
-  }
-
-  const platform = videoInfo?.platform || "Unknown";
-  const platformGrad = PLATFORM_COLORS[platform] || PLATFORM_COLORS.Unknown;
+    }
+    window.open(videoUrl, "_blank");
+  };
 
   return (
     <div className="app">
-
-      {/* ── Navbar ── */}
-      <nav className="navbar">
-        <div className="nav-inner">
-          <a href="#" className="nav-brand">
-            <span className="brand-icon">↓</span>
-            ReelSaver
-          </a>
-          <div className="nav-links">
-            <a href="#features">Features</a>
-            <a href="#compare">Compare</a>
-            <a href="#how">How it works</a>
-            <a href="#faq">FAQ</a>
-          </div>
-          <div className="nav-cta">
-            {user ? (
-              <>
-                <button className="btn-nav-ghost" onClick={() => setShowHistory(true)}>History</button>
-                <button className="btn-nav-ghost" onClick={() => supabase.auth.signOut()}>Sign out</button>
-              </>
-            ) : (
-              <button className="btn-nav-accent" onClick={() => setShowAuth(true)}>Get Started →</button>
-            )}
-          </div>
+      {/* NAV */}
+      <nav className="nav">
+        <a href="/" className="logo">
+          <span className="logo-icon">↓</span>
+          <span>ReelSaver</span>
+        </a>
+        <div className="nav-links">
+          <a href="#features">Features</a>
+          <a href="#compare">Compare</a>
+          <a href="#how">How it works</a>
+          <a href="#faq">FAQ</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); if (user) setShowHistory(true); else setShowAuth(true); }}>Download History</a>
         </div>
+        <button className="btn-primary" onClick={() => setShowAuth(true)}>
+          {user ? "My Account" : "Login / Signup"} →
+        </button>
       </nav>
 
-      {/* ── Hero ── */}
+      {/* HERO */}
       <section className="hero">
-        <div className="hero-inner">
-          <div className="hero-eyebrow">
-            <span className="eyebrow-dot" />
-            Free · No signup · Public videos only
-          </div>
+        <div className="hero-badge">Free · No signup · Public videos only</div>
+        <h1>
+          Download any reel<br />
+          <span className="accent">in less than a minute.</span>
+        </h1>
+        <p className="hero-sub">
+          Paste a link from Instagram, TikTok, YouTube, Facebook or Snapchat.<br />
+          Get the original quality video quickly — no watermark, no waiting.{" "}
+          <span style={{ fontSize: "12px", color: "#888" }}>(Snapchat includes watermark)</span>
+        </p>
 
-          <h1 className="hero-h1">
-            Download any reel<br />
-            <span className="accent-text">in 3 seconds.</span>
-          </h1>
+        <form onSubmit={handleDownload} className="download-form">
+          <input
+            type="url"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="https://www.instagram.com/reel/..."
+            required
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? "Loading..." : "Download ↓"}
+          </button>
+        </form>
 
-          <p className="hero-p">
-            Paste a link from Instagram, TikTok, YouTube, Facebook or Snapchat.<br />
-            Get the original quality video instantly — no watermark, no waiting.
-          </p>
-
-          <form className="hero-form" onSubmit={handleFetch}>
-            <div className="hero-input-wrap">
-              <input
-                className="hero-input"
-                type="text"
-                placeholder="Paste your video URL here..."
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                disabled={loading || downloading}
-              />
-              <button className="hero-btn" type="submit" disabled={loading || !url.trim()}>
-                {loading ? <span className="spin" /> : "Download ↓"}
-              </button>
-            </div>
-          </form>
-
-          {error && <div className="toast toast-error">⚠ {error}</div>}
-          {success && <div className="toast toast-success">✓ {success}</div>}
-
-          {/* Result */}
-          {videoInfo && (
-            <div className="result-box">
-              <div className="result-bar" style={{ background: platformGrad }} />
-              <div className="result-content">
-                {videoInfo.thumbnail && (
-                  <div className="result-thumb-wrap">
-                    <img src={videoInfo.thumbnail} className="result-thumb" alt="" />
-                    {videoInfo.duration && <span className="result-dur">{formatDuration(videoInfo.duration)}</span>}
-                  </div>
-                )}
-                <div className="result-details">
-                  <span className="result-platform">{platform}</span>
-                  <h3 className="result-title">{videoInfo.title}</h3>
-                  {videoInfo.uploader && <p className="result-uploader">{videoInfo.uploader}</p>}
-                  <div className="result-formats">
-                    {videoInfo.formats.map((f) => (
-                      <button key={f.format_id}
-                        className={`fmt-btn ${selectedFormat === f.format_id ? "fmt-active" : ""}`}
-                        style={selectedFormat === f.format_id ? { background: platformGrad, borderColor: "transparent" } : {}}
-                        onClick={() => setSelectedFormat(f.format_id)}>
-                        {f.quality}
-                        {f.filesize && <span className="fmt-size">{formatSize(f.filesize)}</span>}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="result-btns">
-                    <button className="btn-save" onClick={handleDownload} disabled={downloading}>
-                      {downloading ? <><span className="spin" /> Saving...</> : "↓ Save video"}
-                    </button>
-                    <button className="btn-cancel" onClick={() => { setVideoInfo(null); setUrl(""); setError(""); setSuccess(""); }}>Cancel</button>
-                  </div>
-                </div>
+        {error && <div className="error-box">{error}</div>}
+        {result && (
+          <div className="result-box">
+            {result.thumbnail && <img src={result.thumbnail} alt="thumb" className="thumb" />}
+            <div className="result-info">
+              {result.platform && <span className="platform-badge">{result.platform}</span>}
+              {result.title && <p className="result-title">{result.title}</p>}
+              {result.uploader && <p className="result-uploader">{result.uploader}</p>}
+              <div className="quality-btns">
+                {result.formats?.map((f) => (
+                  <button key={f.quality} className={f.quality === result.formats[0]?.quality ? "active" : ""}>
+                    {f.quality}
+                  </button>
+                ))}
+              </div>
+              <div className="save-row">
+                {result.formats?.map((f) => (
+                  <button key={f.quality} className="btn-save" onClick={() => handleSave(f.url, f.quality)}>
+                    ↓ Save video ({f.quality})
+                  </button>
+                ))}
+                <button className="btn-cancel" onClick={() => setResult(null)}>Cancel</button>
               </div>
             </div>
-          )}
-
-          <div className="hero-platforms">
-            {["Instagram", "TikTok", "YouTube", "Facebook", "X", "Snapchat"].map(p => (
-              <span key={p} className="platform-tag">{p}</span>
-            ))}
           </div>
+        )}
+
+        <div className="platform-tags">
+          {["Instagram", "TikTok", "YouTube", "Facebook", "X", "Snapchat"].map((p) => (
+            <span key={p} className={`platform-tag ${p === "Snapchat" ? "platform-tag-snap" : ""}`}>
+              {p === "Snapchat" ? <><i className="bi bi-snapchat"></i> Snapchat <span className="snap-warn">⚠️ watermark</span></> : p}
+            </span>
+          ))}
         </div>
+        <p className="snap-note">
+          ⚠️ <strong>Note:</strong> Snapchat videos are downloaded with a Snapchat watermark. All other platforms (Instagram, TikTok, YouTube, Facebook, X) download <strong>without any watermark</strong>.
+        </p>
       </section>
 
-      {/* ── Stats bar ── */}
+      {/* STATS */}
       <div className="stats-bar">
-        <div className="stats-inner">
-          <div className="stat"><span className="stat-n">10M+</span><span className="stat-l">Videos downloaded</span></div>
-          <div className="stat-div" />
-          <div className="stat"><span className="stat-n">7+</span><span className="stat-l">Platforms supported</span></div>
-          <div className="stat-div" />
-          <div className="stat"><span className="stat-n">4K</span><span className="stat-l">Max quality</span></div>
-          <div className="stat-div" />
-          <div className="stat"><span className="stat-n">0</span><span className="stat-l">Data stored</span></div>
-          <div className="stat-div" />
-          <div className="stat"><span className="stat-n">3s</span><span className="stat-l">Avg. download time</span></div>
-        </div>
+        {[
+          { val: "10M+", label: "Videos downloaded" },
+          { val: "7+", label: "Platforms supported" },
+          { val: "4K", label: "Max quality" },
+          { val: "0", label: "Data stored" },
+          { val: "<1min", label: "Avg. download time" },
+        ].map(({ val, label }) => (
+          <div key={label} className="stat">
+            <span className="stat-val">{val}</span>
+            <span className="stat-label">{label}</span>
+          </div>
+        ))}
       </div>
 
-      {/* ── Comparison ── */}
-      <section className="compare-section" id="compare">
-        <div className="section-inner">
-          <p className="section-eyebrow">THE PROOF</p>
-          <h2 className="section-h2">Stop wasting time.<br /><span className="accent-text">Start saving in seconds.</span></h2>
-          <p className="section-p">Every other method is a workaround. ReelSaver is the direct route.</p>
-
-          <div className="compare-table">
-            <div className="compare-col compare-col-bad">
-              <div className="compare-col-header">
-                <span className="col-badge col-badge-bad">✕ Without ReelSaver</span>
-              </div>
-              {COMPARISONS.map((c, i) => (
-                <div key={i} className="compare-row bad">
-                  <span className="compare-icon bad">✕</span>
-                  <span>{c.without}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="compare-vs">VS</div>
-
-            <div className="compare-col compare-col-good">
-              <div className="compare-col-header">
-                <span className="col-badge col-badge-good">✓ With ReelSaver</span>
-              </div>
-              {COMPARISONS.map((c, i) => (
-                <div key={i} className="compare-row good">
-                  <span className="compare-icon good">✓</span>
-                  <span>{c.with}</span>
-                </div>
-              ))}
-            </div>
+      {/* COMPARE */}
+      <section id="compare" className="compare-section">
+        <p className="section-label">THE PROOF</p>
+        <h2>Stop wasting time.<br /><span className="accent">Start saving in less than a minute.</span></h2>
+        <p className="compare-sub">Every other method is a workaround. ReelSaver is the direct route.</p>
+        <div className="compare-grid">
+          <div className="compare-col bad">
+            <h3>✕ Without ReelSaver</h3>
+            {["Open screen recorder", "Record in real-time (wait full duration)", "Get watermark + low quality", "Manually trim & export", "Lose audio sync or metadata"].map((item) => (
+              <div key={item} className="compare-item bad-item">✕ {item}</div>
+            ))}
           </div>
-        </div>
-      </section>
-
-      {/* ── Features ── */}
-      <section className="features-section" id="features">
-        <div className="section-inner">
-          <p className="section-eyebrow">FEATURES</p>
-          <h2 className="section-h2">Everything you need.<br /><span className="accent-text">Nothing you don't.</span></h2>
-          <div className="features-grid">
-            {FEATURES.map((f) => (
-              <div key={f.title} className="feature-card">
-                <div className="feature-icon">{f.icon}</div>
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
-              </div>
+          <div className="compare-vs">VS</div>
+          <div className="compare-col good">
+            <h3>✓ With ReelSaver</h3>
+            {["Paste the URL", "Download in less than a minute", "Get original quality, no watermark (except Snapchat)", "File is ready quickly", "Full audio, original metadata"].map((item) => (
+              <div key={item} className="compare-item good-item">✓ {item}</div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── How it works ── */}
-      <section className="how-section" id="how">
-        <div className="section-inner">
-          <p className="section-eyebrow">HOW IT WORKS</p>
-          <h2 className="section-h2">Three steps.<br /><span className="accent-text">Under ten seconds.</span></h2>
-          <div className="steps-row">
-            <div className="step-card">
-              <div className="step-num">01</div>
-              <h3>Paste the link</h3>
-              <p>Copy any public video URL from Instagram, TikTok, YouTube, Facebook or Snapchat.</p>
+      {/* FEATURES */}
+      <section id="features" className="features-section">
+        <p className="section-label">FEATURES</p>
+        <h2>Everything you need.<br /><span className="accent">Nothing you don't.</span></h2>
+        <div className="features-grid">
+          {FEATURES.map(({ icon, title, desc }) => (
+            <div key={title} className="feature-card">
+              <span className="feature-icon">{icon}</span>
+              <h3>{title}</h3>
+              <p>{desc}</p>
             </div>
-            <div className="step-arrow">→</div>
-            <div className="step-card">
-              <div className="step-num">02</div>
-              <h3>Click download</h3>
-              <p>We fetch the video instantly — no queues, no waiting rooms, no captchas.</p>
-            </div>
-            <div className="step-arrow">→</div>
-            <div className="step-card">
-              <div className="step-num">03</div>
-              <h3>Save the file</h3>
-              <p>Pick your quality and save the original file directly to your device.</p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* ── FAQ ── */}
-      <section className="faq-section" id="faq">
-        <div className="section-inner faq-inner">
-          <p className="section-eyebrow">FAQ</p>
-          <h2 className="section-h2">Questions?<br /><span className="accent-text">We've got answers.</span></h2>
-          <div className="faq-list">
-            {FAQS.map((item, i) => (
-              <div key={i} className={`faq-item ${openFaq === i ? "open" : ""}`}>
-                <button className="faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                  <span>{item.q}</span>
-                  <span className="faq-icon">{openFaq === i ? "−" : "+"}</span>
-                </button>
-                {openFaq === i && <div className="faq-a">{item.a}</div>}
+      {/* HOW IT WORKS */}
+      <section id="how" className="how-section">
+        <p className="section-label">HOW IT WORKS</p>
+        <h2>Three steps.<br /><span className="accent">Quick & easy.</span></h2>
+        <div className="steps">
+          {HOW_IT_WORKS.map(({ step, title, desc }, i) => (
+            <div key={step} className="step">
+              <div className="step-num">{step}</div>
+              <h3>{title}</h3>
+              <p>{desc}</p>
+              {i < HOW_IT_WORKS.length - 1 && <span className="step-arrow">→</span>}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* PLATFORM STATUS */}
+      <section className="platform-status-section">
+        <p className="section-label" style={{ textAlign: "center" }}>
+          <span style={{ color: "#b6f000" }}>●</span> PLATFORM STATUS
+        </p>
+        <h2 style={{ textAlign: "center", fontSize: "clamp(36px, 6vw, 72px)", fontWeight: 800, lineHeight: 1.1, margin: "0 0 60px 0" }}>
+          Clean downloads.<br />Tested daily across<br />every platform.
+        </h2>
+        <div className="platform-status-list">
+          {PLATFORMS.map(({ num, name, logo, status }) => (
+            <div key={name} className="platform-status-row">
+              <div className="platform-status-left">
+                <span className="platform-num">{num}</span>
+                {logo}
+                <span className="platform-status-name">{name}</span>
               </div>
-            ))}
-          </div>
+              <div className="platform-status-right">
+                <span className={status === "no-watermark" ? "dot-green" : "dot-amber"}>●</span>
+                {status === "no-watermark" ? (
+                  <span className="badge-no-watermark">✓ No Watermark</span>
+                ) : (
+                  <span className="badge-watermark">⚠️ Watermark</span>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* ── CTA Banner ── */}
+      {/* FAQ */}
+      <section id="faq" className="faq-section">
+        <p className="section-label">FAQ</p>
+        <h2>Questions?<br /><span className="accent">We've got answers.</span></h2>
+        <div className="faq-list">
+          {FAQ.map(({ q, a }, i) => (
+            <div key={i} className="faq-item" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+              <div className="faq-q">
+                {q} <span className="faq-toggle">{openFaq === i ? "−" : "+"}</span>
+              </div>
+              {openFaq === i && <div className="faq-a">{a}</div>}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
       <section className="cta-section">
-        <div className="cta-inner">
-          <h2 className="cta-h2">Ready to save your first video?</h2>
-          <p className="cta-p">No signup. No watermark. No limits on public videos.</p>
-          <a href="#" className="btn-cta" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-            Download now →
-          </a>
-        </div>
+        <h2>Ready to save your first video?</h2>
+        <p>No signup. No watermark. No limits on public videos.</p>
+        <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="btn-primary">
+          Download now →
+        </a>
       </section>
 
-      {/* ── Footer ── */}
+      {/* FOOTER */}
       <footer className="footer">
-        <div className="footer-inner">
-          <div className="footer-left">
-            <div className="footer-brand"><span className="brand-icon">↓</span> ReelSaver</div>
-            <p className="footer-sub">Only works with public content.<br />Respect creators' rights.</p>
+        <div className="footer-logo">
+          <span className="logo-icon">↓</span> ReelSaver
+        </div>
+        <p className="footer-note">Only works with public content.<br />Respect creators' rights.</p>
+        <div className="footer-cols">
+          <div>
+            <h4>PRODUCT</h4>
+            <a href="#features">Features</a>
+            <a href="#how">How it works</a>
+            <a href="#compare">Compare</a>
           </div>
-          <div className="footer-cols">
-            <div className="footer-col">
-              <p className="footer-col-title">Product</p>
-              <a href="#features">Features</a>
-              <a href="#how">How it works</a>
-              <a href="#compare">Compare</a>
-            </div>
-            <div className="footer-col">
-              <p className="footer-col-title">Support</p>
-              <a href="#faq">FAQ</a>
-              {user
-                ? <button className="footer-link-btn" onClick={() => setShowHistory(true)}>My History</button>
-                : <button className="footer-link-btn" onClick={() => setShowAuth(true)}>Sign in</button>
-              }
-            </div>
+          <div>
+            <h4>SUPPORT</h4>
+            <a href="#faq">FAQ</a>
+            <a href="#" onClick={() => setShowAuth(true)}>Sign in</a>
           </div>
         </div>
-        <div className="footer-bottom">
-          <span>© 2025 ReelSaver</span>
-          <span>Made with ♥ for content lovers</span>
-        </div>
+        <p className="footer-copy">© 2025 ReelSaver. Made with ♥ for content lovers</p>
       </footer>
 
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
-
-      {showHistory && (
-        <div className="overlay" onClick={(e) => e.target === e.currentTarget && setShowHistory(false)}>
-          <div className="history-modal">
-            <div className="history-modal-head">
-              <h2>Download History</h2>
-              <button onClick={() => setShowHistory(false)}>✕</button>
-            </div>
-            <HistoryPanel user={user} />
-          </div>
-        </div>
-      )}
+      {showHistory && <HistoryPanel onClose={() => setShowHistory(false)} />}
     </div>
   );
 }
