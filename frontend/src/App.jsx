@@ -107,7 +107,7 @@ export default function App() {
     setError("");
     setResult(null);
     try {
-      const res = await fetch(`${API}/download`, {
+      const res = await fetch(`${API}/api/download`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
@@ -156,11 +156,6 @@ export default function App() {
             <a href="#how">How it works</a>
             <a href="#faq">FAQ</a>
             <a href="#history">Download History</a>
-          </div>
-          <div className="nav-cta">
-            <button className="btn-nav-accent" onClick={() => setShowAuth(true)}>
-              Login / Signup →
-            </button>
           </div>
         </div>
       </nav>
