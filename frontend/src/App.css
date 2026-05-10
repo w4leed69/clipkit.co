@@ -445,3 +445,103 @@ body {
   .stats-inner { gap: 20px; }
   .stat-div { display: none; }
 }
+
+/* — Platform Status Section — */
+.platform-status-section {
+  background: #0d0d0d;
+  padding: 100px 60px;
+}
+
+.platform-status-list {
+  display: flex;
+  flex-direction: column;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.platform-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0;
+  border-top: 1px solid #1e1e1e;
+}
+
+.platform-status-row:last-child {
+  border-bottom: 1px solid #1e1e1e;
+}
+
+.platform-status-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.platform-num {
+  color: #444;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 36px;
+}
+
+.platform-status-name {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.platform-status-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dot-green { color: #22c55e; font-size: 10px; }
+.dot-amber { color: #f59e0b; font-size: 10px; }
+
+.badge-no-watermark {
+  background: #0f2d1a;
+  color: #22c55e;
+  border: 1px solid #1a4d2a;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.badge-watermark {
+  background: #2d1a00;
+  color: #f59e0b;
+  border: 1px solid #4d3000;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Snapchat platform tag styling */
+.platform-tag-snap {
+  border-color: #FFFC00 !important;
+  color: #FFFC00 !important;
+  background: rgba(255,252,0,0.08) !important;
+}
+
+.snap-warn {
+  font-size: 11px;
+  color: #ff9900;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.snap-note {
+  margin-top: 14px;
+  font-size: 13px;
+  color: #aaa;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .platform-status-section { padding: 60px 20px; }
+  .platform-status-name { font-size: 16px; }
+  .badge-no-watermark, .badge-watermark { padding: 6px 14px; font-size: 12px; }
+}
