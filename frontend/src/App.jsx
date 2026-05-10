@@ -16,6 +16,19 @@ const PLATFORM_COLORS = {
   Unknown: "linear-gradient(135deg, #c8ff00, #00ffaa)",
 };
 
+const ClipkitLogo = ({ size = 28 }) => (
+  <svg width={size} height={size} viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="28" height="28" rx="8" fill="url(#clipkit-grad)"/>
+    <path d="M17 4L9 16h6l-2 8 10-13h-6l2-7z" fill="white"/>
+    <defs>
+      <linearGradient id="clipkit-grad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#7c3aed"/>
+        <stop offset="100%" stopColor="#a855f7"/>
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
 const FEATURES = [
   { icon: "⚡", title: "Lightning fast", desc: "Downloads complete in less than a minute on any connection." },
   { icon: "🎬", title: "Up to 4K quality", desc: "We preserve original resolution. No compression, no quality loss." },
@@ -32,10 +45,10 @@ const HOW_STEPS = [
 ];
 
 const FAQ_ITEMS = [
-  { q: "Is ReelSaver free to use?", a: "Yes — completely free. No account required for basic downloads." },
+  { q: "Is Clipkit free to use?", a: "Yes — completely free. No account required for basic downloads." },
   { q: "Which platforms are supported?", a: "Instagram, TikTok, YouTube, Facebook, X (Twitter), Snapchat, Pinterest and more." },
   { q: "Do you store my videos?", a: "No. We never store your videos, links, or personal data." },
-  { q: "Can I download private videos?", a: "No — ReelSaver only works with public content." },
+  { q: "Can I download private videos?", a: "No — Clipkit only works with public content." },
   { q: "What's the max quality I can download?", a: "Up to 4K, depending on the original upload quality." },
 ];
 
@@ -134,8 +147,8 @@ export default function App() {
       <nav className="navbar">
         <div className="nav-inner">
           <a href="/" className="nav-brand">
-            <div className="brand-icon">↓</div>
-            ReelSaver
+            <ClipkitLogo size={32} />
+            Clipkit
           </a>
           <div className="nav-links">
             <a href="#features">Features</a>
@@ -254,11 +267,11 @@ export default function App() {
           <h2 className="section-h2">
             Stop wasting time.<br />Start saving in less than a minute.
           </h2>
-          <p className="section-p">Every other method is a workaround. ReelSaver is the direct route.</p>
+          <p className="section-p">Every other method is a workaround. Clipkit is the direct route.</p>
           <div className="compare-table">
             <div className="compare-col compare-col-bad">
               <div className="compare-col-header">
-                <span className="col-badge col-badge-bad">✕ Without ReelSaver</span>
+                <span className="col-badge col-badge-bad">✕ Without Clipkit</span>
               </div>
               {["Open screen recorder", "Record in real-time (wait full duration)", "Get watermark + low quality", "Manually trim & export", "Lose audio sync or metadata"].map((t) => (
                 <div className="compare-row bad" key={t}>
@@ -269,7 +282,7 @@ export default function App() {
             <div className="compare-vs">vs</div>
             <div className="compare-col compare-col-good">
               <div className="compare-col-header">
-                <span className="col-badge col-badge-good">✓ With ReelSaver</span>
+                <span className="col-badge col-badge-good">✓ With Clipkit</span>
               </div>
               {["Paste the URL", "Download in less than a minute", "Get original quality, no watermark (except Snapchat)", "File is ready quickly", "Full audio, original metadata"].map((t) => (
                 <div className="compare-row good" key={t}>
@@ -382,8 +395,8 @@ export default function App() {
         <div className="footer-inner">
           <div className="footer-left">
             <div className="footer-brand">
-              <div className="brand-icon">↓</div>
-              <span>ReelSaver</span>
+              <ClipkitLogo size={28} />
+              <span>Clipkit</span>
             </div>
             <p className="footer-sub">Free video downloader for Instagram, TikTok, YouTube, Facebook, X, Snapchat & Pinterest.</p>
           </div>
@@ -402,7 +415,7 @@ export default function App() {
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© 2025 ReelSaver. For personal, non-commercial use only.</span>
+          <span>© 2025 Clipkit. For personal, non-commercial use only.</span>
           <span>No data stored. No watermark (except Snapchat).</span>
         </div>
       </footer>
