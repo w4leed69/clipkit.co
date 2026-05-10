@@ -19,9 +19,9 @@ const PLATFORM_COLORS = {
 const FEATURES = [
   { icon: "⚡", title: "Lightning fast", desc: "Downloads complete in less than a minute on any connection." },
   { icon: "🎬", title: "Up to 4K quality", desc: "We preserve original resolution. No compression, no quality loss." },
-  { icon: "🚫", title: "Zero watermark", desc: "Clean, source-quality video. No overlays, no branding added — except Snapchat, which includes its own watermark." },
+  { icon: "🚫", title: "Zero watermark", desc: "Clean, source-quality video. No overlays, no branding — except Snapchat, which includes its own watermark." },
   { icon: "🌐", title: "7+ platforms", desc: "Instagram, TikTok, YouTube, Facebook, X, Snapchat, Pinterest & more." },
-  { icon: "🔒", title: "Private by default", desc: "We don't store your links, files, or any personal data." },
+  { icon: "🔒", title: "Private by default", desc: "We never store your links, files, or any personal data." },
   { icon: "🖥️", title: "No install needed", desc: "Runs entirely in your browser. Works on any device quickly." },
 ];
 
@@ -122,230 +122,290 @@ export default function App() {
     window.open(videoUrl, "_blank");
   };
 
+  const colorFor = (platform) =>
+    PLATFORM_COLORS[platform] || PLATFORM_COLORS.Unknown;
+
   return (
     <div className="app">
-      {/* NAV */}
-      <nav className="nav">
-        <a href="/" className="logo">
-          <span className="logo-icon">↓</span>
-          <span>ReelSaver</span>
-        </a>
-        <div className="nav-links">
-          <a href="#features">Features</a>
-          <a href="#compare">Compare</a>
-          <a href="#how">How it works</a>
-          <a href="#faq">FAQ</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); if (user) setShowHistory(true); else setShowAuth(true); }}>Download History</a>
+      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
+      {showHistory && <HistoryPanel user={user} onClose={() => setShowHistory(false)} />}
+
+      {/* ── Navbar ── */}
+      <nav className="navbar">
+        <div className="nav-inner">
+          <a href="/" className="nav-brand">
+            <div className="brand-icon">↓</div>
+            ReelSaver
+          </a>
+          <div className="nav-links">
+            <a href="#features">Features</a>
+            <a href="#compare">Compare</a>
+            <a href="#how">How it works</a>
+            <a href="#faq">FAQ</a>
+            <a href="#history">Download History</a>
+          </div>
+          <div className="nav-cta">
+            <button className="btn-nav-accent" onClick={() => setShowAuth(true)}>
+              Login / Signup →
+            </button>
+          </div>
         </div>
-        <button className="cta-btn" onClick={() => setShowAuth(true)}>
-          {user ? "My Account" : "Login / Signup"} →
-        </button>
       </nav>
 
-      {/* HERO */}
+      {/* ── Hero ── */}
       <section className="hero">
-        <div className="hero-badge">Free · No signup · Public videos only</div>
-        <h1 className="hero-h1">
-          Download any reel<br />
-          <span className="accent">in less than a minute.</span>
-        </h1>
-        <p className="hero-p">
-          Paste a link from Instagram, TikTok, YouTube, Facebook or Snapchat.<br />
-          Get the original quality video quickly — no watermark, no waiting.{" "}
-          <span style={{ fontSize: "12px", color: "#888" }}>(Snapchat includes watermark)</span>
-        </p>
-        <form onSubmit={handleDownload} className="hero-input-wrap">
-          <input
-            className="hero-input"
-            type="url"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://www.instagram.com/reel/..."
-            required
-          />
-          <button type="submit" className="hero-btn" disabled={loading}>
-            {loading ? "Loading..." : "Download ↓"}
-          </button>
-        </form>
-        {error && <div className="error-msg">{error}</div>}
-        {result && (
-          <div className="result-card">
-            {result.thumbnail && (
-              <div className="result-thumb-wrap">
-                <img src={result.thumbnail} alt="thumb" className="result-thumb" />
-                {result.aspect_ratio && <span className="result-ratio">{result.aspect_ratio}</span>}
-              </div>
-            )}
-            <div className="result-info">
-              {result.platform && <span className="result-platform">{result.platform.toUpperCase()}</span>}
-              {result.title && <p className="result-title">{result.title}</p>}
-              {result.uploader && <p className="result-uploader">{result.uploader}</p>}
-              <div className="quality-row">
-                {result.formats?.map((f, i) => (
-                  <button key={f.quality} className={`quality-btn${i === 0 ? " active" : ""}`}>{f.quality}</button>
-                ))}
-              </div>
-              <div className="save-row">
-                <button className="save-btn" onClick={() => handleSave(result.formats?.[0]?.url, result.formats?.[0]?.quality)}>↓ Save video</button>
-                <button className="cancel-btn" onClick={() => setResult(null)}>Cancel</button>
+        <div className="hero-inner">
+          <div className="hero-eyebrow">
+            <span className="eyebrow-dot"></span>
+            Free · No signup · Public videos only
+          </div>
+          <h1 className="hero-h1">
+            Download any reel<br />in less than a minute.
+          </h1>
+          <p className="hero-p">
+            Paste a link from Instagram, TikTok, YouTube, Facebook or Snapchat.<br />
+            Get the original quality video quickly — no watermark, no waiting.{" "}
+            <span style={{ fontSize: "0.75em", opacity: 0.6 }}>(Snapchat includes watermark)</span>
+          </p>
+          <form className="hero-form" onSubmit={handleDownload}>
+            <div className="hero-input-wrap">
+              <input
+                className="hero-input"
+                type="url"
+                placeholder="https://www.instagram.com/reel/..."
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                required
+              />
+              <button className="hero-btn" type="submit" disabled={loading}>
+                {loading ? "Fetching…" : "Download ↓"}
+              </button>
+            </div>
+          </form>
+
+          <div className="platform-pills">
+            <span className="platform-pill">Instagram</span>
+            <span className="platform-pill">TikTok</span>
+            <span className="platform-pill">YouTube</span>
+            <span className="platform-pill">Facebook</span>
+            <span className="platform-pill">X</span>
+            <span className="platform-pill">Pinterest</span>
+            <span className="platform-pill platform-pill-snap">
+              <i className="bi bi-snapchat"></i> Snapchat{" "}
+              <span className="snap-warn">⚠ watermark</span>
+            </span>
+          </div>
+          <p className="snap-note">
+            ⚠️ <strong>Note:</strong> Snapchat videos are downloaded with a Snapchat watermark. All other platforms download{" "}
+            <strong>without any watermark</strong>.
+          </p>
+
+          {error && <p style={{ color: "var(--bad)", marginTop: 16 }}>{error}</p>}
+
+          {result && (
+            <div className="result-box">
+              {result.thumbnail && (
+                <img src={result.thumbnail} alt="thumbnail" className="result-thumb" />
+              )}
+              <div className="result-content">
+                <p className="result-title">{result.title || "Video ready"}</p>
+                <p className="result-platform" style={{ background: colorFor(result.platform) }}>
+                  {result.platform}
+                </p>
+                <div className="result-btns">
+                  {result.formats?.map((f) => (
+                    <button
+                      key={f.quality}
+                      className="fmt-btn"
+                      onClick={() => handleSave(f.url, f.quality)}
+                    >
+                      ↓ {f.quality}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        <div className="platform-pills">
-          {["Instagram", "TikTok", "YouTube", "Facebook", "X", "Pinterest"].map((p) => (
-            <span key={p} className="platform-pill">{p}</span>
-          ))}
-          <span className="platform-pill platform-pill-snap">
-            <i className="bi bi-snapchat"></i> Snapchat <span className="snap-warn">⚠️ watermark</span>
-          </span>
+          )}
         </div>
-        <p className="snap-note">
-          ⚠️ <strong>Note:</strong> Snapchat videos are downloaded with a Snapchat watermark. All other platforms download <strong>without any watermark</strong>.
-        </p>
       </section>
 
-      {/* STATS */}
+      {/* ── Stats Bar ── */}
       <div className="stats-bar">
         <div className="stats-inner">
           {[
-            { val: "10M+", label: "Videos downloaded" },
-            { val: "7+", label: "Platforms supported" },
-            { val: "4K", label: "Max quality" },
-            { val: "0", label: "Data stored" },
-            { val: "<1min", label: "Avg. download time" },
-          ].map(({ val, label }) => (
-            <div key={label} className="stat">
-              <span className="stat-val">{val}</span>
-              <span className="stat-label">{label}</span>
+            { n: "10M+", l: "Videos downloaded" },
+            { n: "7+", l: "Platforms supported" },
+            { n: "4K", l: "Max quality" },
+            { n: "0", l: "Data stored" },
+            { n: "<1min", l: "Avg. download time" },
+          ].map((s) => (
+            <div className="stat" key={s.l}>
+              <span className="stat-n">{s.n}</span>
+              <span className="stat-l">{s.l}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* COMPARE */}
-      <section id="compare" className="compare-section">
-        <p className="section-label">THE PROOF</p>
-        <h2 className="section-h2">Stop wasting time.<br /><span className="accent">Start saving in less than a minute.</span></h2>
-        <p className="compare-intro">Every other method is a workaround. ReelSaver is the direct route.</p>
-        <div className="compare-table">
-          <div className="compare-col">
-            <h3 className="compare-col-title bad-title">✕ Without ReelSaver</h3>
-            {["Open screen recorder","Record in real-time (wait full duration)","Get watermark + low quality","Manually trim & export","Lose audio sync or metadata"].map((item) => (
-              <div key={item} className="compare-item bad-item">✕ {item}</div>
+      {/* ── Compare ── */}
+      <section className="compare-section" id="compare">
+        <div className="section-inner">
+          <p className="section-eyebrow">THE PROOF</p>
+          <h2 className="section-h2">
+            Stop wasting time.<br />Start saving in less than a minute.
+          </h2>
+          <p className="section-p">Every other method is a workaround. ReelSaver is the direct route.</p>
+          <div className="compare-table">
+            <div className="compare-col compare-col-bad">
+              <div className="compare-col-header">
+                <span className="col-badge col-badge-bad">✕ Without ReelSaver</span>
+              </div>
+              {["Open screen recorder", "Record in real-time (wait full duration)", "Get watermark + low quality", "Manually trim & export", "Lose audio sync or metadata"].map((t) => (
+                <div className="compare-row bad" key={t}>
+                  <span className="compare-icon bad">✕</span> {t}
+                </div>
+              ))}
+            </div>
+            <div className="compare-vs">vs</div>
+            <div className="compare-col compare-col-good">
+              <div className="compare-col-header">
+                <span className="col-badge col-badge-good">✓ With ReelSaver</span>
+              </div>
+              {["Paste the URL", "Download in less than a minute", "Get original quality, no watermark (except Snapchat)", "File is ready quickly", "Full audio, original metadata"].map((t) => (
+                <div className="compare-row good" key={t}>
+                  <span className="compare-icon good">✓</span> {t}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Features ── */}
+      <section className="features-section" id="features">
+        <div className="section-inner">
+          <p className="section-eyebrow">FEATURES</p>
+          <h2 className="section-h2">Everything you need.<br />Nothing you don't.</h2>
+          <div className="features-grid">
+            {FEATURES.map((f) => (
+              <div className="feature-card" key={f.title}>
+                <div className="feature-icon">{f.icon}</div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
             ))}
           </div>
-          <div className="compare-vs">VS</div>
-          <div className="compare-col">
-            <h3 className="compare-col-title good-title">✓ With ReelSaver</h3>
-            {["Paste the URL","Download in less than a minute","Get original quality, no watermark (except Snapchat)","File is ready quickly","Full audio, original metadata"].map((item) => (
-              <div key={item} className="compare-item good-item">✓ {item}</div>
+        </div>
+      </section>
+
+      {/* ── How it works ── */}
+      <section className="how-section" id="how">
+        <div className="section-inner">
+          <p className="section-eyebrow">HOW IT WORKS</p>
+          <h2 className="section-h2">Three steps.<br />Quick &amp; easy.</h2>
+          <div className="steps-row">
+            {HOW_STEPS.map((s, i) => (
+              <div key={s.step} style={{ display: "flex", alignItems: "center", flex: i < HOW_STEPS.length - 1 ? "none" : 1 }}>
+                <div className="step-card" style={{ flex: 1 }}>
+                  <div className="step-num">{s.step}</div>
+                  <h3>{s.title}</h3>
+                  <p>{s.desc}</p>
+                </div>
+                {i < HOW_STEPS.length - 1 && <div className="step-arrow">→</div>}
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section id="features" className="features-section">
-        <p className="section-label">FEATURES</p>
-        <h2 className="section-h2">Everything you need.<br /><span className="accent">Nothing you don't.</span></h2>
-        <div className="features-grid">
-          {FEATURES.map(({ icon, title, desc }) => (
-            <div key={title} className="feature-card">
-              <span className="feature-icon">{icon}</span>
-              <h3 className="feature-title">{title}</h3>
-              <p className="feature-desc">{desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section id="how" className="how-section">
-        <p className="section-label">HOW IT WORKS</p>
-        <h2 className="section-h2">Three steps.<br /><span className="accent">Quick &amp; easy.</span></h2>
-        <div className="steps-row">
-          {HOW_STEPS.map(({ step, title, desc }, i) => (
-            <div key={step} className="step-card">
-              <div className="step-num">{step}</div>
-              <h3 className="step-title">{title}</h3>
-              <p className="step-desc">{desc}</p>
-              {i < HOW_STEPS.length - 1 && <span className="step-arrow">→</span>}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* PLATFORM STATUS */}
+      {/* ── Platform Status ── */}
       <section className="platform-status-section">
-        <p className="section-label" style={{ textAlign: "center" }}><span style={{ color: "#b6f000" }}>●</span> PLATFORM STATUS</p>
-        <h2 className="section-h2" style={{ textAlign: "center" }}>Clean downloads.<br /><span className="accent">Tested daily across every platform.</span></h2>
-        <div className="platform-status-list">
-          {PLATFORMS.map(({ num, name, logo, status }) => (
-            <div key={name} className="platform-status-row">
-              <div className="platform-status-left">
-                <span className="platform-num">{num}</span>
-                {logo}
-                <span className="platform-status-name">{name}</span>
+        <div className="section-inner">
+          <p className="section-eyebrow">● PLATFORM STATUS</p>
+          <h2 className="section-h2">Clean downloads.<br />Tested daily across every platform.</h2>
+          <div className="platform-status-list">
+            {PLATFORMS.map((p) => (
+              <div className="platform-status-row" key={p.num}>
+                <div className="platform-status-left">
+                  <span className="platform-num">{p.num}</span>
+                  {p.logo}
+                  <span className="platform-status-name">{p.name}</span>
+                </div>
+                <div className="platform-status-right">
+                  <span className={p.status === "watermark" ? "dot-amber" : "dot-green"}></span>
+                  <span className={p.status === "watermark" ? "badge-watermark" : "badge-no-watermark"}>
+                    {p.status === "watermark" ? "⚠ Watermark" : "✓ No Watermark"}
+                  </span>
+                </div>
               </div>
-              <div className="platform-status-right">
-                <span className={status === "no-watermark" ? "dot-green" : "dot-amber"}>●</span>
-                {status === "no-watermark" ? (
-                  <span className="badge-no-watermark">✓ No Watermark</span>
-                ) : (
-                  <span className="badge-watermark">⚠️ Watermark</span>
-                )}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section id="faq" className="faq-section">
-        <p className="section-label">FAQ</p>
-        <h2 className="section-h2">Questions?<br /><span className="accent">We've got answers.</span></h2>
-        <div className="faq-list">
-          {FAQ_ITEMS.map(({ q, a }, i) => (
-            <div key={i} className="faq-item" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-              <div className="faq-question">{q} <span className="faq-toggle">{openFaq === i ? "−" : "+"}</span></div>
-              {openFaq === i && <div className="faq-answer">{a}</div>}
+      {/* ── FAQ ── */}
+      <section className="faq-section" id="faq">
+        <div className="section-inner">
+          <p className="section-eyebrow">FAQ</p>
+          <h2 className="section-h2">Common questions.</h2>
+          <div className="faq-inner">
+            <div className="faq-list">
+              {FAQ_ITEMS.map((item, i) => (
+                <div className={["faq-item", openFaq === i ? "open" : ""].join(" ")} key={i}>
+                  <button className="faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                    <span>{item.q}</span>
+                    <span className="faq-icon">{openFaq === i ? "▲" : "▼"}</span>
+                  </button>
+                  {openFaq === i && <div className="faq-a">{item.a}</div>}
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
-      {/* CTA */}
+      {/* ── CTA ── */}
       <section className="cta-section">
-        <h2 className="cta-h2">Ready to save your first video?</h2>
-        <p className="cta-sub">No signup. No watermark. No limits on public videos.</p>
-        <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="cta-btn">Download now →</a>
+        <div className="section-inner">
+          <div className="cta-inner">
+            <h2 className="cta-h2">Ready to save your first video?</h2>
+            <p className="cta-p">Free. No account needed. Works in less than a minute.</p>
+            <button className="btn-cta" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+              Start downloading →
+            </button>
+          </div>
+        </div>
       </section>
 
-      {/* FOOTER */}
+      {/* ── Footer ── */}
       <footer className="footer">
         <div className="footer-inner">
-          <div className="footer-logo"><span className="logo-icon">↓</span> ReelSaver</div>
-          <p className="footer-tagline">Only works with public content.<br />Respect creators' rights.</p>
+          <div className="footer-left">
+            <div className="footer-brand">
+              <div className="brand-icon">↓</div>
+              <span>ReelSaver</span>
+            </div>
+            <p className="footer-sub">Free video downloader for Instagram, TikTok, YouTube, Facebook, X, Snapchat & Pinterest.</p>
+          </div>
           <div className="footer-cols">
             <div className="footer-col">
-              <h4 className="footer-col-title">PRODUCT</h4>
+              <p className="footer-col-title">Product</p>
               <a href="#features">Features</a>
               <a href="#how">How it works</a>
               <a href="#compare">Compare</a>
             </div>
             <div className="footer-col">
-              <h4 className="footer-col-title">SUPPORT</h4>
+              <p className="footer-col-title">Support</p>
               <a href="#faq">FAQ</a>
-              <a href="#" onClick={() => setShowAuth(true)}>Sign in</a>
+              <button className="footer-link-btn" onClick={() => setShowHistory(true)}>Download History</button>
             </div>
           </div>
-          <p className="footer-copy">© 2025 ReelSaver. Made with ♥ for content lovers</p>
+        </div>
+        <div className="footer-bottom">
+          <span>© 2025 ReelSaver. For personal, non-commercial use only.</span>
+          <span>No data stored. No watermark (except Snapchat).</span>
         </div>
       </footer>
-
-      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
-      {showHistory && <HistoryPanel onClose={() => setShowHistory(false)} />}
     </div>
   );
 }
