@@ -20,7 +20,7 @@ const FEATURES = [
   { icon: "⚡", title: "Lightning fast", desc: "Downloads complete in less than a minute on any connection." },
   { icon: "🎬", title: "Up to 4K quality", desc: "We preserve original resolution. No compression, no quality loss." },
   { icon: "🚫", title: "Zero watermark", desc: "Clean, source-quality video. No overlays, no branding added — except Snapchat, which includes its own watermark." },
-  { icon: "🌐", title: "7+ platforms", desc: "Instagram, TikTok, YouTube, Facebook, X, Snapchat & more." },
+  { icon: "🌐", title: "7+ platforms", desc: "Instagram, TikTok, YouTube, Facebook, X, Snapchat, Pinterest & more." },
   { icon: "🔒", title: "Private by default", desc: "We don't store your links, files, or any personal data." },
   { icon: "🖥️", title: "No install needed", desc: "Runs entirely in your browser. Works on any device quickly." },
 ];
@@ -33,7 +33,7 @@ const HOW_STEPS = [
 
 const FAQ_ITEMS = [
   { q: "Is ReelSaver free to use?", a: "Yes — completely free. No account required for basic downloads." },
-  { q: "Which platforms are supported?", a: "Instagram, TikTok, YouTube, Facebook, X (Twitter), Snapchat and more." },
+  { q: "Which platforms are supported?", a: "Instagram, TikTok, YouTube, Facebook, X (Twitter), Snapchat, Pinterest and more." },
   { q: "Do you store my videos?", a: "No. We never store your videos, links, or personal data." },
   { q: "Can I download private videos?", a: "No — ReelSaver only works with public content." },
   { q: "What's the max quality I can download?", a: "Up to 4K, depending on the original upload quality." },
@@ -63,6 +63,10 @@ const PLATFORMS = [
   {
     num: "006", name: "Snapchat", status: "watermark",
     logo: <div className="platform-logo-wrap" style={{ background: "#FFFC00" }}><i className="bi bi-snapchat" style={{ fontSize: 24, color: "#000", lineHeight: 1 }}></i></div>
+  },
+  {
+    num: "007", name: "Pinterest", status: "no-watermark",
+    logo: <div className="platform-logo-wrap" style={{ background: "#e60023" }}><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="white" viewBox="0 0 16 16"><path d="M8 0a8 8 0 0 0-2.915 15.452c-.07-.633-.134-1.606.027-2.297.146-.625.975-4.13.975-4.13s-.249-.498-.249-1.235c0-1.158.67-2.023 1.503-2.023.71 0 1.053.533 1.053 1.172 0 .714-.454 1.782-.69 2.773-.197.828.415 1.503 1.229 1.503 1.474 0 2.61-1.554 2.61-3.798 0-1.986-1.427-3.374-3.464-3.374-2.36 0-3.745 1.769-3.745 3.598 0 .712.274 1.475.615 1.892a.25.25 0 0 1 .057.239c-.063.259-.202.828-.23.944-.037.153-.123.185-.284.111-1.058-.493-1.719-2.042-1.719-3.285 0-2.669 1.938-5.122 5.593-5.122 2.936 0 5.215 2.093 5.215 4.886 0 2.916-1.838 5.264-4.389 5.264-.858 0-1.664-.446-1.94-.972l-.527 1.966c-.191.734-.707 1.654-1.052 2.215A8 8 0 1 0 8 0"/></svg></div>
   },
 ];
 
@@ -189,7 +193,7 @@ export default function App() {
           </div>
         )}
         <div className="platform-pills">
-          {["Instagram", "TikTok", "YouTube", "Facebook", "X"].map((p) => (
+          {["Instagram", "TikTok", "YouTube", "Facebook", "X", "Pinterest"].map((p) => (
             <span key={p} className="platform-pill">{p}</span>
           ))}
           <span className="platform-pill platform-pill-snap">
@@ -197,7 +201,7 @@ export default function App() {
           </span>
         </div>
         <p className="snap-note">
-          ⚠️ <strong>Note:</strong> Snapchat videos are downloaded with a Snapchat watermark. All other platforms (Instagram, TikTok, YouTube, Facebook, X) download <strong>without any watermark</strong>.
+          ⚠️ <strong>Note:</strong> Snapchat videos are downloaded with a Snapchat watermark. All other platforms download <strong>without any watermark</strong>.
         </p>
       </section>
 
